@@ -40,6 +40,8 @@ router.get("/", (req, res) => {
                         .find("p.tagline")
                         .text();
 
+      result.saved = true;
+
       //If the first character of a link is "/", then assume it's a reddit self-link and prepend the old.reddit domain. 
       if (result.link.charAt(0) === "/"){
         result.link = `https://old.reddit.com${result.link}`;
@@ -66,9 +68,11 @@ router.post("/articles/save", (req, res) => {
   });
 });
 
-router.get("/articles/saved", (req, res) => {
+router.get("/articles/getSaved", (req, res) => {
   db.Article.find().populate("noteID").then(savedRes => {
     console.log(savedRes);
+    const articles = {results: savedRes};
+    res.render("index", articles);
   });
 });
 
